@@ -1,7 +1,8 @@
 {
   "env": {
-    "MONGO_USER": "your-username",
-    "MONGO_PASSWORD": "your-password",
-    "MONGO_DB": "your-db-name"
+    "MONGO_USER": "matthewhamann",
+    "MONGO_PASSWORD": "P%40$sW0rd",
+    "MONGO_DB": "react-typescript-node",
+    "MONGO_URL": "localhost:27017"
   }
 }

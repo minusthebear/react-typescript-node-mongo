@@ -75,10 +75,14 @@ body {
     border: 1px solid #ff9900;
     border-radius: 10px;
     display: block;
-    margin: 0.3rem 1rem 0 0;
+    margin: 0.3rem 1rem 0.3rem 0;
 }
 
-.Form label {
+.Form .error-container {
+    height:1.375rem;
+    color:red;
+    display:flex;
+    align-items: center;
 }
 
 .Form button {

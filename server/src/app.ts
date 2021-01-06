@@ -1,26 +1,45 @@
 import express, { Express } from 'express'
-import mongoose from 'mongoose'
 import cors from 'cors'
 import todoRoutes from './routes'
+import {redisSession} from "./config/session/redis"
+import cookieParser from "cookie-parser"
+import fs from "fs"
+import https from "https"
+//@ts-ignore
+import compression from "compression"
+require("./db/connect-mongodb")
 
 const app: Express = express()
 
 const PORT: string | number = process.env.PORT || 4000
 
-app.use(cors())
+app.disable('x-powered-by')
+app.use(compression())
+app.use(cookieParser())
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+    exposedHeaders: ['set-cookie']
+}))
+app.use(express.json())
+app.use(express.urlencoded({
+    // extended: true
+}))
+app.use(redisSession)
+app.set('trust proxy', 1)
 app.use(todoRoutes)
-
-const uri: string = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@clustertodo.raz9g.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
-const options = { useNewUrlParser: true, useUnifiedTopology: true }
-mongoose.set('useFindAndModify', false)
-
-mongoose
-    .connect(uri, options)
-    .then(() =>
-        app.listen(PORT, () =>
-            console.log(`Server running on http://localhost:${PORT}`)
-        )
-    )
-    .catch((error) => {
-        throw error
-    })
+//
+// https
+//     .createServer(
+//         {
+//             key: fs.readFileSync('server.key'),
+//             cert: fs.readFileSync('server.cert')
+//         },
+//         app
+//     )
+//     .listen(PORT, () => {
+//         console.log(`Server running on http://localhost:${PORT}`)
+//     });
+app.listen(PORT, () =>
+    console.log(`Server running on http://localhost:${PORT}`)
+)
